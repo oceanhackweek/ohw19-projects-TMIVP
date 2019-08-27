@@ -10,7 +10,9 @@
 
 Temperature = x | Depth = y
 --- | --- 
-blah blah blah | whatevs whatevs whatevs 
+blah | whatevs
+blah | whatevs
+blah | whatevs   
 
 
 2. Pick a pattern from that user-given profile with the "correct" numbers and dimensions. 
