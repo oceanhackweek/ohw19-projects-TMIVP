@@ -74,7 +74,7 @@ Temp = x | Depth = y
 
 3. The code returns a correlation across the convolved profile.
 
-![optional caption text](haifa_depth.png)
+![optional caption text](data/haifa_depth.png)
 
 
 
