@@ -38,5 +38,3 @@ for times in range(vert_col_array.shape[0]):
                 vert_col_array[times,lats,:] = datasets[0].UADCP_GRID.isel({time_axes[0]:times, 'YLAT':lats}) 
 
 depth_column = datasets[0].Z750.data
-
-
