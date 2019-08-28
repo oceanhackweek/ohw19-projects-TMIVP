@@ -3,3 +3,10 @@
 themo_sst0717-0618.csv
 
 Example_CTD.ipynb
+
+
+## Ignore temporary autosave files
+.ipynb_checkpoints/Fake_data-checkpoint.ipynb
+.ipynb_checkpoints/README-checkpoint.ipynb
+.ipynb_checkpoints/explore_crosscorrelation-checkpoint.ipynb
+.ipynb_checkpoints/signal_correlation_calculation-checkpoint.ipynb
