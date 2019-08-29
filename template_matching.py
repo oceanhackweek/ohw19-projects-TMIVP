@@ -45,16 +45,20 @@ def find_correlation(in_signal, coord, template, cut_range):
     if cut_end >= len(coord):
         cut_end = len(coord)-1
     print('starting figure')
-    fig, (ax0, ax1, ax2, ax3) = plt.subplots(4, 1, sharex=True)
+    fig, (ax0, ax1, ax2, ax3) = plt.subplots(4, 1, figsize=(10,10))
     print('initialised fig')
     ax0.set_title('Template nb ' + str(template))
-    ax0.plot(coord[:len(temp)],temp, label='template')
+    ax0.plot((coord[:len(temp)]-coord[0])/np.max(np.abs(coord[:len(temp)]-coord[0])),temp, label='template')
+    ax0.set_xlabel('normalized template coordinates')
     ax1.set_title('This is the signal you provided')
     ax1.plot(coord,in_signal, label='signal')
+    ax1.set_xlabel('Data coordinates')
     ax2.set_title('This is the correlation between them')
     ax2.plot(coord,corr_array, label='correlation')
+    ax2.set_xlabel('Data coordinates')
     ax3.set_title('This is where I find the maximum correlation')
     ax3.plot(coord[:len(temp)]+coord[int(loc_med)]-coord[len(temp)]/2., temp, label='shifted template')
+    ax3.set_xlabel('Data coordinates')
     ax3.axvline(coord[cut_beg], ls='--', c='k')
     ax3.axvline(coord[cut_end], ls='--', c='k')
     for ax in [ax0,ax1,ax2,ax3]:
