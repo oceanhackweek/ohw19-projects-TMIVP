@@ -73,7 +73,6 @@ Depth = y | Temperature = x
   <img src=data/haifa_depth.png>
 </p>
 
-<center>![Text here](data/haifa_depth.png)</center>
 
 #### 2. TMIFVP provides a "template" shape that has typical numbers and dimensions for an oceanographic profile. This will act as a pattern matching feature for real data. 
 * Templates should be scaled towards the smaller end of the spectrum: the cross-correlation won't work if the template is larger than the profile. Additionally, if the template is too large it will smooth the entire profile. Instead of selecting small similar features, it may grab spaces between features that have a similar shape.
@@ -112,7 +111,22 @@ Within each chunk:
 #### 5. Find best template-chunk pair for each profile, ie, the highest similarity score.
 * This produces a quality score from 0 - 1, resulting from matching the template and the chunk of the profile. 
 
-#### 6. Cluster the similarity score?
+#### 6. Produce figures and output from TMIFVP.
+* Histogram of quality distribution
+<p align="center">
+  <img src=data/Figure_1.png>
+</p>
+
+* Seaborn jointplot of physical location and quality score relationship.
+<p align="center">
+  <img src=data/jointplot.png>
+</p>
+
+* Map of profile locations, shaded by quality. The darker the shade, the higher the quality score.
+<font color="red"> Ensure the function actually does this. </font>
+<p align="center">
+  <img src=data/Figure_2.png>
+</p>
 
 ***
 
@@ -137,11 +151,8 @@ Extra Notes
 Features with the same area but different shapes can pose a problem.
 
 Possibly add lon and latitude for global placement
-Add in photo.
 
 Will have a number for every profile. Cluster those numbers. Provides a dynamically adjustable threshold. 
 What kind of vertical resolution for your profile do you  need? Do a cross correlation at increasing frequency. 
-
-Eventually vertical segmentation to account for multiple matching features?
 
 ***
