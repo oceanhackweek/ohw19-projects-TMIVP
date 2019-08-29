@@ -40,6 +40,10 @@ def find_correlation(in_signal, coord, template, cut_range):
     loc_med = np.median(loc); print('loc_med = ', loc_med)
     cut_beg = int(loc_med-cut_range*len(temp))
     cut_end = int(loc_med+cut_range*len(temp))
+    if cut_beg < 0:
+        cut_beg = 0
+    if cut_end >= len(coord):
+        cut_end = len(coord)-1
     print('starting figure')
     fig, (ax0, ax1, ax2, ax3) = plt.subplots(4, 1, sharex=True)
     print('initialised fig')
