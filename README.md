@@ -69,21 +69,32 @@ Depth = y | Temperature = x
 77 | 20.38 
 
 
+<p align="center">
+  <img src=data/haifa_depth.png>
+</p>
 
-!<center>![Text here](data/haifa_depth.png)</center>
+<center>![Text here](data/haifa_depth.png)</center>
 
 #### 2. TMIFVP provides a "template" shape that has typical numbers and dimensions for an oceanographic profile. This will act as a pattern matching feature for real data. 
+* Templates should be scaled towards the smaller end of the spectrum: the cross-correlation won't work if the template is larger than the profile. Additionally, if the template is too large it will smooth the entire profile. Instead of selecting small similar features, it may grab spaces between features that have a similar shape.
 
-* <span style="color:red">**TEMPLATE SHOULD BE SMALLER- ADD JUSTIFY** </span>
-Because the cross-correlation won't work if the template is larger than the profile, and the template has to be too small because if it's too large it will smooth the entire profile. Instead of grabbing small similar features, it will grab a space between are similar.
+* There are several template options in 2d array format. Below is an example of a possible template.
 
-* <span style="color:red">**EXPLAIN HOW WE PRODUCE THE TEMPLATE, add example picture** </span>
-We will provide the user with some template options, which exist as a list of numbers (2d array).  
+<p align="center">
+  <img src=data/Exponential_example.png>
+</p>
+
+* This would be used to match real user data, such as the example below.
+
+<p align="center">
+  <img src=data/Profile_example.png>
+</p>
+
 
 #### 3. TMIFVP uses the SciPy cross-correlation function to match the two arrays: pattern & profile. 
 
 * The cross-correlation function will find the location of a possible matching pattern. Maximum correlation occurs when they are the same size. 
-* Find the maximum of segmented profile, take the median of that array, shift pattern by the median (aka the "lag"). The lag tells you how far you need to shift the pattern to match the profile the most. Crop the signal to where it matches the template, then proceed to the Procrustes analysis.
+* Find the maximum of segmented profile, take the median of that array, shift pattern by the median (aka the "lag"). The lag tells you how far you need to shift the pattern to match the profile the most.
 
 
 #### 4. Select section of the profile that matches the template.
@@ -91,9 +102,12 @@ We will provide the user with some template options, which exist as a list of nu
 Cut the user profile by n times the width of the feature. 
 Within each chunk:
 * Use Procrustes analysis to align template to the profile chunk. In statistics, Procrustes analysis is a form of statistical shape analysis used to analyse the distribution of a set of shapes. The function handles the scaling of the template matching for you. The name Procrustes (Greek: Προκρούστης) refers to a bandit from Greek mythology who made his victims fit his bed either by stretching their limbs or cutting them off (source: Wikipedia).
-!<center>![Text here](data/Prokrustes.jpg)</center>
+<p align="center">
+  <img src=data/Prokrustes.jpg>
+</p>
 
-* Calculate the similarity. <span style="color:red">**WHAT SPECIFICALLY ARE WE USING TO DO THAT**</span>.
+* Calculate the similarity using the root means square error, or RMSE. RMSE is a frequently used measure of the differences between values (sample or population values) predicted by a model or an estimator and the values observed. The RMSD represents the square root of the second sample moment of the differences between predicted values and observed values or the quadratic mean of these differences (source: Wikipedia).
+
 
 #### 5. Find best template-chunk pair for each profile, ie, the highest similarity score.
 * This produces a quality score from 0 - 1, resulting from matching the template and the chunk of the profile. 
