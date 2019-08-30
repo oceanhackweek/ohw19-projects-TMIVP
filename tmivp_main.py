@@ -5,22 +5,32 @@ import scipy.io  # only needed for reading in .mat file
 from sklearn.metrics import mean_squared_error
 from scipy.optimize import curve_fit
 
-template_num = 1  # exponential
-# template_num = 2  # gaussian
+# template_num = 1  # exponential
+template_num = 2  # gaussian
 # template_num = 3  # step
 
 # List of scale factors of template size to try
 scale_factors = [1, 2, 3, 4, 5]
 
-# Load data
-mat = scipy.io.loadmat('NorthAtlanticCTDData_A05_AR01_1998.mat')
-t = np.squeeze(mat.get('t'))  # temperature
-s = np.squeeze(mat.get('s'))  # salinity
-z = np.squeeze(mat.get('z'))  # depth
-lat = np.squeeze(mat.get('lat'))
-lon = np.squeeze(mat.get('lon'))
+# # Load data
+import xarray as xr
+file  = 'SADCP_TAO5b_uv_5_140W_gridded.cdf' 
+ds = xr.open_dataset(file)
+u = ds.UADCP_GRID.isel(TAX_5=0)
+lat = ds.YLAT.values
+z = ds.Z750.values
+lon  = np.ones(len(lat)) * 140
+
+# mat = scipy.io.loadmat('NorthAtlanticCTDData_A05_AR01_1998.mat')
+# t = np.squeeze(mat.get('t'))  # temperature
+# s = np.squeeze(mat.get('s'))  # salinity
+# z = np.squeeze(mat.get('z'))  # depth
+# lat = np.squeeze(mat.get('lat'))
+# lon = np.squeeze(mat.get('lon'))
+# del(s, mat)  # clean up workspace
+
 nstations = len(lat)
-del(s, mat)  # clean up workspace
+
 
 # Use cross-correlation to find location of template in each profile
 # and calculate mse between template and profile chunk
