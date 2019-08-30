@@ -3,7 +3,8 @@
 themo_sst0717-0618.csv
 
 Example_CTD.ipynb
-
+__pycache__
+tst.py
 
 ## Ignore temporary autosave files
 .ipynb_checkpoints/Fake_data-checkpoint.ipynb
