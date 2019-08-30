@@ -95,6 +95,10 @@ Depth = y | Temperature = x
 * The cross-correlation function will find the location of a possible matching pattern. Maximum correlation occurs when they are the same size. 
 * Find the maximum of segmented profile, take the median of that array, shift pattern by the median (aka the "lag"). The lag tells you how far you need to shift the pattern to match the profile the most.
 
+<p align="center">
+  <img src=data/template_match.png>
+</p>
+
 
 #### 4. Select section of the profile that matches the template.
 
@@ -114,7 +118,7 @@ Within each chunk:
 #### 6. Produce figures and output from TMIFVP.
 * Histogram of quality distribution
 <p align="center">
-  <img src=data/Figure_1.png>
+  <img src=data/score_distribution.png>
 </p>
 
 * Seaborn jointplot of physical location and quality score relationship.
@@ -125,7 +129,7 @@ Within each chunk:
 * Map of profile locations, shaded by quality. The darker the shade, the higher the quality score.
 <font color="red"> Ensure the function actually does this. </font>
 <p align="center">
-  <img src=data/Figure_2.png>
+  <img src=data/example_map.png>
 </p>
 
 ***
@@ -150,9 +154,7 @@ Extra Notes
 
 Features with the same area but different shapes can pose a problem.
 
-Possibly add lon and latitude for global placement
-
 Will have a number for every profile. Cluster those numbers. Provides a dynamically adjustable threshold. 
-What kind of vertical resolution for your profile do you  need? Do a cross correlation at increasing frequency. 
+What kind of vertical resolution for your profile do you need? Do a cross correlation at increasing frequency. 
 
 ***
