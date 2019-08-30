@@ -58,6 +58,7 @@ Our group used the principles of cross-correlation to vertically search profiles
 
 *Example Table and Graph*
 
+<center>
 Depth = y | Temperature = x
 --- | --- 
 5  | 29.66  
@@ -67,7 +68,7 @@ Depth = y | Temperature = x
 59 | 21.58 
 68 | 21.15 
 77 | 20.38 
-
+</center>
 
 <p align="center">
   <img src=data/haifa_depth.png>
