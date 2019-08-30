@@ -1,9 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import signal
+import scipy.io  # only needed for reading in .mat file
+from sklearn.metrics import mean_squared_error
+from scipy.optimize import curve_fit
 
 
-def gaussian(x, mu, sig):
+def gaussian_init(x, mu, sig):
     return np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)))
 
 
@@ -21,7 +24,7 @@ def define_template(nb, profile_length):
         template = -np.exp(np.linspace(0, 1, npts)/50)+3  # this parameters were empirically determined to look like an ocean profile's exponential
     elif nb == 2:
         print('using gauss')
-        template = gaussian(np.linspace(0, 1, npts), 0.5, 1)
+        template = gaussian_init(np.linspace(0, 1, npts), 0.5, 1)
     elif nb == 3:
         print('step')
         template = [0., 0, 1, 1]
@@ -29,6 +32,59 @@ def define_template(nb, profile_length):
         print("I don't undertsand the template shape")
         exit(0)
     return template
+
+
+def fit_exp(value, depth):
+    ''' This function fits an exponential to a profile chunk
+    Input:: value: 1d array (profile)
+            depth: 1d array of depths
+    Output:: MSE error (float)
+    '''
+    #Fit exponential to profile chunk
+    x = depth
+    y = value
+    popt, pcov = curve_fit(func, x, y)
+    y_pred = func(x,*popt)
+
+    #Calculate MSE
+    MSE = mean_squared_error(y, y_pred)
+
+    #Plot resulting fit
+#    plt.scatter(y,x)
+#    plt.plot(y_pred,x)
+#    plt.title('RMSE=' + str(np.sqrt(MSE)))
+#    plt.gca().invert_yaxis()
+#    plt.show()
+
+    return MSE
+
+
+def fit_gauss(value, depth):
+    ''' This function fits a gaussian to a profile chunk
+    Input:: value: 1d array (profile)
+            depth: 1d array of depths
+    Output:: MSE error (float)
+    '''
+    #Make initial guesses for gauss function parameters based on data then
+    #fit Gaussian to profile chunk
+    x = depth
+    y = value
+    mean0 = sum(x * y) / sum(y)
+    sigma0 = np.sqrt(sum(y * (x - mean0)**2) / sum(y))
+    popt,pcov = curve_fit(gauss,x,y,p0=[1,mean0,sigma0])
+    y_pred = gauss(x,*popt)
+
+    #Calculate MSE
+    MSE = mean_squared_error(y, y_pred)
+
+    #Plot resulting fit
+#    plt.scatter(y,x)
+#    plt.plot(y_pred,x)
+#    plt.title('RMSE=' + str(np.sqrt(MSE)))
+#    plt.gca().invert_yaxis()
+#    plt.show()
+
+    return MSE
 
 
 def find_correlation(in_signal, coord, template, cut_range):
@@ -73,4 +129,8 @@ def find_correlation(in_signal, coord, template, cut_range):
     plt.tight_layout()
     plt.show()
     print('exiting, see ya!')
-    return in_signal[cut_beg:cut_end+1], coord[cut_beg:cut_end+1]
+
+    chunk_value = in_signal[cut_beg:cut_end+1]
+    chunk_depth = coord[cut_beg:cut_end+1]
+
+    return chunk_value, chunk_depth
