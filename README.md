@@ -43,24 +43,19 @@ Below, our cut-to-fit-the-bed template matching pipeline.
 
 ### The Solution
 
-*This needs to be expanded upon once we have more specifics*
 
-Our group used the principles of cross-correlation to vertically search profiles and match features to a template.
+Our group used the principles of cross-correlation to vertically search profiles and match expected oceanographic profile feature templates to real user data.
 
-<span style="color:red">**WHY THIS KIND OF TEMPLATE? WHAT'S THE JUSTIFICATION?**</span>
-
-using template that you expectto find in yuour data depending on location etc
+TMIFVP currently supplies three typical templates for matching. 
 
 ***
 
 ### Steps to Achieve Profile Nirvana
 #### 1. User provides two 1-dimensional arrays to the interface, one of which is temperature (for the purpose of this example; multiple variables are possible) and the other depth. Those two arrays are returned as a table and visualized profiles. 
-<span style="color: red">**CHECK THAT THIS IS TRUE, SET UP FUNCTION TO DO SO.** </span>
 
 
 *Example Table and Graph*
 
-**USER CAN ADD A TEMPLATE THAT ISN'T AVAILABLE, AND WE ALSO HAVE THREE TEMPLATES 1 EXPONENTIAL 2 GAUSSIAN AND 3 STEP TO CHOOSE FROM**
 Depth = y | Temperature = x
 --- | --- 
 5  | 29.66  
@@ -77,9 +72,13 @@ Depth = y | Temperature = x
 
 
 #### 2. TMIFVP provides a "template" shape that has typical numbers and dimensions for an oceanographic profile. This will act as a pattern matching feature for real data. 
+
+* The three templates currently used for matching are 1. Exponential, 2. Gaussian, and 3. Step profile. 
+
 * Templates should be scaled towards the smaller end of the spectrum: the cross-correlation won't work if the template is larger than the profile. Additionally, if the template is too large it will smooth the entire profile. Instead of selecting small similar features, it may grab spaces between features that have a similar shape.
 
-* There are several template options in 2d array format. Below is an example of a possible template.
+* There are several template options in 2d array format. Below is an example of a possible template. Choose the template that you would expect to find in your data depending on location, season, etc. 
+
 
 <p align="center">
   <img src=data/Exponential_example.png>
@@ -162,11 +161,3 @@ https://en.wikipedia.org/wiki/Procrustes
 
 ***
 
-Extra Notes
-
-Features with the same area but different shapes can pose a problem.
-
-Will have a number for every profile. Cluster those numbers. Provides a dynamically adjustable threshold. 
-What kind of vertical resolution for your profile do you need? Do a cross correlation at increasing frequency. 
-
-***
