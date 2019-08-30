@@ -7,16 +7,21 @@ def gaussian(x, mu, sig):
     return np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)))
 
 
-def define_template(nb):
+def define_template(nb, profile_length):
     """
     gets the templates to use for correlation
     """
+    if int(profile_length/10) < 5:
+        npts = 5
+    else:
+        npts = int(profile_length/10)
+
     if nb == 1:
         print('using exp')
-        template = np.exp(np.linspace(0, 1, 5))
+        template = -np.exp(np.linspace(0, 1, npts)/50)+3  # this parameters were empirically determined to look like an ocean profile's exponential
     elif nb == 2:
         print('using gauss')
-        template = gaussian(np.linspace(0, 1, 5), 0.5, 1)
+        template = gaussian(np.linspace(0, 1, npts), 0.5, 1)
     elif nb == 3:
         print('step')
         template = [0., 0, 1, 1]
@@ -37,7 +42,7 @@ def find_correlation(in_signal, coord, template, cut_range):
     cut_range ( = x times the template width will be used for fitting)
     returns:
     """
-    temp = define_template(template)
+    temp = define_template(template, len(in_signal))
     corr_array = signal.correlate(in_signal, temp,  mode='same')  # xcorr
     loc = np.where(np.abs(corr_array) == np.max(np.abs(corr_array)))
     loc_med = np.median(loc)
@@ -52,8 +57,6 @@ def find_correlation(in_signal, coord, template, cut_range):
     fig, (ax0, ax1, ax2, ax3) = plt.subplots(1, 4, figsize=(10, 5), sharey=True)
     print('initialised fig')
     ax0.set_title('Template nb ' + str(template))
-    #ax0.plot(temp, (coord[:len(temp)]-coord[0])/np.max(np.abs(coord[:len(temp)]-coord[0])), label='template')
-    #ax0.set_ylabel('Normalized Vertical Coord \n (template)'
     ax0.plot(temp, coord[:len(temp)], label='template')
     ax0.invert_yaxis()
     ax0.set_ylabel('Vertical coordinates')
