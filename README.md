@@ -138,7 +138,7 @@ Within each segment:
 </p>
 
 * Map of profile locations, shaded by quality. The darker the shade, the higher the quality score.
-<font color="red"> Ensure the function actually does this. </font>
+
 <p align="center">
   <img src=data/example_map.png>
 </p>
