@@ -43,21 +43,18 @@ Below, our cut-to-fit-the-bed template matching pipeline.
 
 ### The Solution
 
-*This needs to be expanded upon once we have more specifics*
 
-Our group used the principles of cross-correlation to vertically search profiles and match features to a template.
+Our group used the principles of cross-correlation to vertically search profiles and match expected oceanographic profile feature templates to real user data.
 
-<span style="color:red">**WHY THIS KIND OF TEMPLATE? WHAT'S THE JUSTIFICATION?**</span>
+TMIFVP currently supplies three typical templates for matching. 
 
 ***
 
 ### Steps to Achieve Profile Nirvana
 #### 1. User provides two 1-dimensional arrays to the interface, one of which is temperature (for the purpose of this example; multiple variables are possible) and the other depth. Those two arrays are returned as a table and visualized profiles. 
-<span style="color: red">**CHECK THAT THIS IS TRUE, SET UP FUNCTION TO DO SO.** </span>
 
 
 *Example Table and Graph*
-
 
 Depth = y | Temperature = x
 --- | --- 
@@ -75,9 +72,13 @@ Depth = y | Temperature = x
 
 
 #### 2. TMIFVP provides a "template" shape that has typical numbers and dimensions for an oceanographic profile. This will act as a pattern matching feature for real data. 
+
+* The three templates currently used for matching are 1. Exponential, 2. Gaussian, and 3. Step profile. 
+
 * Templates should be scaled towards the smaller end of the spectrum: the cross-correlation won't work if the template is larger than the profile. Additionally, if the template is too large it will smooth the entire profile. Instead of selecting small similar features, it may grab spaces between features that have a similar shape.
 
-* There are several template options in 2d array format. Below is an example of a possible template.
+* There are several template options in 2d array format. Below is an example of a possible template. Choose the template that you would expect to find in your data depending on location, season, etc. 
+
 
 <p align="center">
   <img src=data/Exponential_example.png>
@@ -93,28 +94,42 @@ Depth = y | Temperature = x
 #### 3. TMIFVP uses the SciPy cross-correlation function to match the two arrays: pattern & profile. 
 
 * The cross-correlation function will find the location of a possible matching pattern. Maximum correlation occurs when they are the same size. 
-* Find the maximum of segmented profile, take the median of that array, shift pattern by the median (aka the "lag"). The lag tells you how far you need to shift the pattern to match the profile the most.
+* Profile is segmented depending on where the maximum correlation occurs. 
 
 
-#### 4. Select section of the profile that matches the template.
+<p align="center">
+  <img src=data/template_match.png>
+</p>
 
-Cut the user profile by n times the width of the feature. 
-Within each chunk:
-* Use Procrustes analysis to align template to the profile chunk. In statistics, Procrustes analysis is a form of statistical shape analysis used to analyse the distribution of a set of shapes. The function handles the scaling of the template matching for you. The name Procrustes (Greek: Προκρούστης) refers to a bandit from Greek mythology who made his victims fit his bed either by stretching their limbs or cutting them off (source: Wikipedia).
+
+#### 4. Optimize template to match the chosen segment.
+
+Within each segment:
+* In case a step template: Use Procrustes analysis to align template to the profile chunk. In statistics, Procrustes analysis is a form of statistical shape analysis used to analyse the distribution of a set of shapes. The function handles the scaling of the template matching for you. The name Procrustes (Greek: Προκρούστης) refers to a bandit from Greek mythology who made his victims fit his bed either by stretching their limbs or cutting them off (source: Wikipedia).
 <p align="center">
   <img src=data/Prokrustes.jpg>
 </p>
 
-* Calculate the similarity using the root means square error, or RMSE. RMSE is a frequently used measure of the differences between values (sample or population values) predicted by a model or an estimator and the values observed. The RMSD represents the square root of the second sample moment of the differences between predicted values and observed values or the quadratic mean of these differences (source: Wikipedia).
+* In case of Gaussian or exponential templates, use a normal fit. 
 
+<p align="center">
+  <img src=data/Gaussian_fit.png
+  style="width:500px;height:400px;">
+</p>
 
+* For all templates, calculate the similarity using the root means square error, or RMSE. RMSE is a frequently used measure of the differences between values (sample or population values) predicted by a model or an estimator and the values observed. The RMSD represents the square root of the second sample moment of the differences between predicted values and observed values or the quadratic mean of these differences (source: Wikipedia).
+
+**TBD**
 #### 5. Find best template-chunk pair for each profile, ie, the highest similarity score.
 * This produces a quality score from 0 - 1, resulting from matching the template and the chunk of the profile. 
+**TBD**
 
 #### 6. Produce figures and output from TMIFVP.
 * Histogram of quality distribution
 <p align="center">
-  <img src=data/Figure_1.png>
+  <img src=data/score_distribution.png
+  style="width:500px;height:400px;">
+>
 </p>
 
 * Seaborn jointplot of physical location and quality score relationship.
@@ -123,9 +138,9 @@ Within each chunk:
 </p>
 
 * Map of profile locations, shaded by quality. The darker the shade, the higher the quality score.
-<font color="red"> Ensure the function actually does this. </font>
+
 <p align="center">
-  <img src=data/Figure_2.png>
+  <img src=data/example_map.png>
 </p>
 
 ***
@@ -146,13 +161,3 @@ https://en.wikipedia.org/wiki/Procrustes
 
 ***
 
-Extra Notes
-
-Features with the same area but different shapes can pose a problem.
-
-Possibly add lon and latitude for global placement
-
-Will have a number for every profile. Cluster those numbers. Provides a dynamically adjustable threshold. 
-What kind of vertical resolution for your profile do you  need? Do a cross correlation at increasing frequency. 
-
-***
