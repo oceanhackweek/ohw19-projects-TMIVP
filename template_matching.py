@@ -20,13 +20,13 @@ def define_template(nb, profile_length):
         npts = int(profile_length/10)
 
     if nb == 1:
-        print('using exp')
+        #print('using exp')
         template = -np.exp(np.linspace(0, 1, npts)/50)+3  # this parameters were empirically determined to look like an ocean profile's exponential
     elif nb == 2:
-        print('using gauss')
+        #print('using gauss')
         template = gaussian_init(np.linspace(0, 1, npts), 0.5, 1)
     elif nb == 3:
-        print('step')
+        #print('step')
         template = [0., 0, 1, 1]
     else:
         print("I don't undertsand the template shape")
@@ -53,11 +53,11 @@ def fit_exp(value, depth):
             MSE = mean_squared_error(y, y_pred)
         except ValueError:
             MSE = np.nan
-            print('This profile chunk cannot be fit to the exponential template')
+            #print('This profile chunk cannot be fit to the exponential template')
             return MSE
     except RuntimeError:
         MSE = np.nan
-        print('This profile chunk cannot be fit to the exponential template')
+        #print('This profile chunk cannot be fit to the exponential template')
         return MSE
     #Plot resulting fit
 #    plt.scatter(y,x)
@@ -91,7 +91,7 @@ def fit_gauss(value, depth):
 
     except RuntimeError:
         MSE = np.nan
-        print('This profile chunk cannot be fit to the gaussian template')
+        #print('This profile chunk cannot be fit to the gaussian template')
         return MSE
 
     #Plot resulting fit
@@ -119,7 +119,7 @@ def find_correlation(in_signal, coord, template, cut_range):
     corr_array = signal.correlate(in_signal, temp,  mode='same')  # xcorr
     loc = np.where(np.abs(corr_array) == np.max(np.abs(corr_array)))
     loc_med = np.median(loc)
-    print('loc_med = ', loc_med)
+    #print('loc_med = ', loc_med)
     cut_beg = int(loc_med-cut_range*len(temp))
     cut_end = int(loc_med+cut_range*len(temp))
     if cut_beg < 0:
