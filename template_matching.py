@@ -82,12 +82,17 @@ def fit_gauss(value, depth):
     x = depth
     y = value
     mean0 = sum(x * y) / sum(y)
-    sigma0 = np.sqrt(sum(y * (x - mean0)**2) / sum(y))
+    sigma0 = np.sqrt(np.sum(y * (x - mean0)**2) / np.sum(y))
     try:
         popt, pcov = curve_fit(gauss, x, y, p0=[1, mean0, sigma0])
         y_pred = gauss(x, *popt)
         #Calculate MSE
-        MSE = mean_squared_error(y, y_pred)
+        try:
+            MSE = mean_squared_error(y, y_pred)
+        except ValueError:
+            MSE = np.nan
+            print('This profile chunk cannot be fit to the gaussian template')
+            return MSE
 
     except RuntimeError:
         MSE = np.nan

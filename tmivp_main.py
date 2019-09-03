@@ -13,24 +13,25 @@ template_num = 2  # gaussian
 scale_factors = [1, 2, 3, 4, 5]
 
 # # Load data
-import xarray as xr
-file  = 'SADCP_TAO5b_uv_5_140W_gridded.cdf' 
-ds = xr.open_dataset(file)
-u = ds.UADCP_GRID.isel(TAX_5=0)
-lat = ds.YLAT.values
-z = ds.Z750.values
-lon  = np.ones(len(lat)) * 140
+# Anna's data
+# import xarray as xr
+# file  = 'SADCP_TAO5b_uv_5_140W_gridded.cdf'
+# ds = xr.open_dataset(file)
+# t = ds.UADCP_GRID.isel(TAX_5=0).sel(YLAT=slice(-4,4)).values
+# lat = ds.YLAT.sel(YLAT=slice(-4,4)).values
+# z = np.expand_dims(ds.Z750.values,1)+np.zeros_like(t)
+# lon  = np.ones(len(lat)) * 140
 
-# mat = scipy.io.loadmat('NorthAtlanticCTDData_A05_AR01_1998.mat')
-# t = np.squeeze(mat.get('t'))  # temperature
-# s = np.squeeze(mat.get('s'))  # salinity
-# z = np.squeeze(mat.get('z'))  # depth
-# lat = np.squeeze(mat.get('lat'))
-# lon = np.squeeze(mat.get('lon'))
-# del(s, mat)  # clean up workspace
+# Paige's data
+mat = scipy.io.loadmat('NorthAtlanticCTDData_A05_AR01_1998.mat')
+t = np.squeeze(mat.get('t'))  # temperature
+s = np.squeeze(mat.get('s'))  # salinity
+z = np.squeeze(mat.get('z'))  # depth
+lat = np.squeeze(mat.get('lat'))
+lon = np.squeeze(mat.get('lon'))
+del(s, mat)  # clean up workspace
 
 nstations = len(lat)
-
 
 # Use cross-correlation to find location of template in each profile
 # and calculate mse between template and profile chunk
@@ -40,12 +41,15 @@ for i in range(nstations):
     t_prof = t[:, i]
     z_prof = z[:, i]
     t_prof = t_prof[np.isfinite(t_prof)]
-    z_prof = z_prof[np.isfinite(z_prof)]
+    z_prof = z_prof[np.isfinite(t_prof)]
     MSE_sf = np.zeros((len(scale_factors), 1))
     for j, scale_factor in zip(range(len(scale_factors)), scale_factors):
         chunk_value, chunk_depth = tm.find_correlation(t_prof, z_prof,
                                                        template_num,
                                                        scale_factor)
+
+        chunk_value = chunk_value[np.isfinite(chunk_value)]
+        chunk_depth = chunk_depth[np.isfinite(chunk_value)]
         if template_num == 1:
             # For now only using top 60 pts because chunk is causing errors
             MSE_sf[j] = tm.fit_exp(t_prof[:60], z_prof[:60])
